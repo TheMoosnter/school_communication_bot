@@ -42,7 +42,7 @@ async def message_text_handler(message: Message, state: FSMContext, bot):
 
     sender = ChatSender(bot)
 
-    await sender.send_message_to_chat(command, message.from_user, message.text)
+    await sender.send_message_to_chat(command, message.from_user, message)
 
     await message.answer("Повідомлення відправлено. Дякуємо за вашу активність!")
 

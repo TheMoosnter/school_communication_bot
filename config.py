@@ -15,4 +15,6 @@ class Config:
         self.chat_id = self.cfg['chat_data']['chat_id']
         self.chat_threads_id = self.cfg['chat_data']['treads_id']
 
+        self.admin_ids = self.cfg['admins']
+
 config = Config()

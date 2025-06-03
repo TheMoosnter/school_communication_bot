@@ -4,14 +4,14 @@ from loguru import logger
 from aiogram import Bot, Dispatcher
 
 from config import config
-from app import admin, communication
+from app import admin, communication, technical
 
 bot = Bot(token=config.bot_token)
 dp = Dispatcher()
 
 
 async def main():
-    dp.include_routers(communication.router)
+    dp.include_routers(communication.router, admin.router, technical.router)
     await dp.start_polling(bot)
 
 

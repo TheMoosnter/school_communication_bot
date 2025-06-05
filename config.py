@@ -17,4 +17,6 @@ class Config:
 
         self.admin_ids = self.cfg['admins']
 
+        self.db_path = self.cfg['db_path']
+
 config = Config()

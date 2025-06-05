@@ -5,6 +5,7 @@ from aiogram import Bot, Dispatcher
 
 from config import config
 from app import admin, communication, technical
+from db.models import create_student_table
 
 bot = Bot(token=config.bot_token)
 dp = Dispatcher()
@@ -16,6 +17,7 @@ async def main():
 
 
 if __name__ == "__main__":
+    create_student_table()
     logger.info("Бота запущено")
     try:
         asyncio.run(main())

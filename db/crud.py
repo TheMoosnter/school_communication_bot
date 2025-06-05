@@ -28,3 +28,14 @@ def print_students():
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM students")
         return cursor.fetchall()
+
+def is_student_in_db(tg_id: int):
+    """
+    Проверяет наличие телеграмм-акаунта в базе данных.
+    :param tg_id: айди телеграмм акаунта
+    :return: true, если аккаунт уже есть в БД, false, если отсутствует.
+    """
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT 1 FROM students WHERE telegram_id=?", (tg_id,))
+        return cursor.fetchone() is not None

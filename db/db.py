@@ -4,6 +4,6 @@ from config import config
 def get_connection():
     """
     Подключается к базе данных
-    :return:
+    :return: подключение к базе данных
     """
     return sqlite3.connect(config.db_path)

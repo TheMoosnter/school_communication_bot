@@ -13,7 +13,7 @@ class ChatSender:
 
         :param forum_type: Тип ветки, куда сообщение пересылается
         :param user: Информация об авторе сообщения
-        :param text: Текст сообщения
+        :param mes: Информация о сообщении
         """
         thread_id = config.chat_threads_id.get(f"{forum_type}_thread_id")
 

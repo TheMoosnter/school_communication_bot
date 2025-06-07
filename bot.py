@@ -1,10 +1,10 @@
 import asyncio
-from loguru import logger
 
 from aiogram import Bot, Dispatcher
+from loguru import logger
 
+from app import admin, communication, register, start, technical
 from config import config
-from app import admin, communication, technical, register, start
 from db.models import create_student_table
 
 bot = Bot(token=config.bot_token)

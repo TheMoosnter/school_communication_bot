@@ -1,11 +1,7 @@
 from aiogram import Bot
 from aiogram.enums import ParseMode
-from aiogram.types import (
-    InlineKeyboardMarkup,
-    InlineKeyboardButton,
-    CallbackQuery,
-    ReplyKeyboardMarkup,
-)
+from aiogram.types import (CallbackQuery, InlineKeyboardButton,
+                           InlineKeyboardMarkup, ReplyKeyboardMarkup)
 
 from config import config
 

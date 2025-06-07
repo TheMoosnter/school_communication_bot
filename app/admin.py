@@ -1,6 +1,7 @@
 import re
-from aiogram import Router, F
-from aiogram.exceptions import TelegramForbiddenError, TelegramBadRequest
+
+from aiogram import F, Router
+from aiogram.exceptions import TelegramBadRequest, TelegramForbiddenError
 from aiogram.types import Message
 
 from app.middlewares.admin_middleware import AdminCheckMiddleware

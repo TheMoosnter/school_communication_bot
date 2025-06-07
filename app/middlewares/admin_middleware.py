@@ -1,6 +1,7 @@
+from typing import Any, Awaitable, Callable, Dict
+
 from aiogram import BaseMiddleware
 from aiogram.types.message import Message
-from typing import Callable, Dict, Any, Awaitable
 
 from config import config
 

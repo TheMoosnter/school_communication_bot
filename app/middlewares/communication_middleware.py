@@ -1,8 +1,9 @@
+from typing import Any, Awaitable, Callable, Dict
+
 from aiogram import BaseMiddleware
 from aiogram.types.message import Message
-from typing import Callable, Dict, Any, Awaitable
 
-from db.crud import is_user_in_db, is_student_in_db
+from db.crud import is_student_in_db, is_user_in_db
 
 
 class StudentCheckMiddleware(BaseMiddleware):

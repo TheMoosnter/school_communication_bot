@@ -1,11 +1,11 @@
 from aiogram import Router
 from aiogram.filters import Command
-from aiogram.types import Message
-from aiogram.fsm.state import StatesGroup, State
 from aiogram.fsm.context import FSMContext
+from aiogram.fsm.state import State, StatesGroup
+from aiogram.types import Message
 
-from utils.message_forward import ChatSender
 from app.middlewares.communication_middleware import StudentCheckMiddleware
+from utils.message_forward import ChatSender
 
 router = Router()
 router.message.middleware(StudentCheckMiddleware())

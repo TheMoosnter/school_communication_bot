@@ -1,4 +1,5 @@
-from aiogram import Router, F
+from aiogram import Router, F, Bot
+from aiogram.enums import ParseMode
 from aiogram.exceptions import TelegramForbiddenError, TelegramBadRequest
 from aiogram.filters import Command
 from aiogram.types import Message, InlineKeyboardButton, InlineKeyboardMarkup, CallbackQuery
@@ -9,6 +10,7 @@ from aiogram.methods.send_message import SendMessage
 from app.middlewares import AdminCheckMiddleware
 from config import config
 from db.crud import *
+from utils.class_president_sender import ClassPresidentSender
 
 class RegisterStates(StatesGroup):
     waiting_for_name = State()
@@ -69,7 +71,7 @@ async def get_class_number(message: Message, state: FSMContext):
     await message.answer("Оберіть літеру вашого класу", reply_markup=markup)
 
 @router.callback_query(RegisterStates.waiting_for_class_letter, F.data.startswith("letter:"))
-async def get_class_letter(callback: CallbackQuery, state: FSMContext):
+async def get_class_letter(callback: CallbackQuery, state: FSMContext, bot):
     letter = callback.data.split(":")[1]
     data = await state.get_data()
 
@@ -82,5 +84,38 @@ async def get_class_letter(callback: CallbackQuery, state: FSMContext):
         is_registered=False
     )
 
+    sender = ClassPresidentSender(bot)
+
+    await sender.send_reg_request_to_class_president(
+        tg_id=callback.from_user.id,
+        tg_full_name=callback.from_user.full_name,
+        name=data['name'],
+        surname=data['surname'],
+        class_number=data['class_number'],
+        class_letter=letter
+    )
+
     await callback.message.edit_text("Ваша заявка відправлена старості.")
     await state.clear()
+
+@router.callback_query(F.data.startswith("approve:"))
+async def approve_student(callback: CallbackQuery, bot: Bot):
+    student_id = int(callback.data.split(":")[1])
+    student_name = get_student_name(student_id) + " " + get_student_surname(student_id)
+
+    register_student(tg_id=student_id)
+
+    student_link = f'<a href="tg://user?id={student_id}">{student_name}</a>'
+    await callback.message.edit_text(f"Заявка учня {student_link} була прийнята.", parse_mode=ParseMode.HTML)
+    await bot.send_message(student_id, "Ви були зареєстровані.\nВведіть команду /start для отримання інформації щодо функціоналу боту.")
+
+@router.callback_query(F.data.startswith("reject:"))
+async def reject_student(callback: CallbackQuery, bot: Bot):
+    student_id = int(callback.data.split(":")[1])
+    student_name = get_student_name(student_id) + " " + get_student_surname(student_id)
+
+    remove_student(student_id)
+
+    student_link = f'<a href="tg://user?id={student_id}">{student_name}</a>'
+    await callback.message.edit_text(f"Заявка учня {student_link} була відхилена.", parse_mode=ParseMode.HTML)
+    await bot.send_message(student_id, "Ваша заявка на реєстрацію була відхилена.")

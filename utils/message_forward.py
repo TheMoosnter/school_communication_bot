@@ -5,7 +5,6 @@ class ChatSender:
     def __init__(self, bot: Bot):
         self.bot = bot
         self.chat_id = config.chat_id
-        self.chat_id = config.chat_id
 
     async def send_message_to_chat(self, forum_type: str, user, mes):
         """

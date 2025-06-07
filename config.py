@@ -19,13 +19,22 @@ class Config:
 
         self.db_path = self.cfg['db_path']
 
-        self.class_data = self._load_class_list("data/class_list.yaml")
+        self.class_data = self.load_class_list("data/class_list.yaml")
+        self.class_presidents_data = self.load_class_presidents_list("data/class_presidents_list.yaml")
 
-    def _load_class_list(self, path: str) -> dict:
+    def load_class_list(self, path: str) -> dict:
         """
         Загружает словарь с классами та буквами классов.
         :param path: путь к YAML файлу с классами та буквами
         :return: словарь доступных букв классов
+        """
+        with open(path, "r", encoding="utf-8") as f:
+            return yaml.safe_load(f)
+    def load_class_presidents_list(self, path: str) -> dict:
+        """
+        Загружает словарь со старостами та их классами.
+        :param path: путь к YAML файлу с классами та буквами
+        :return: словарь старост классов
         """
         with open(path, "r", encoding="utf-8") as f:
             return yaml.safe_load(f)

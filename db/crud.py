@@ -19,6 +19,16 @@ def add_students(tg_id: int, first_name: str, last_name: str, class_number: int,
         """, (tg_id, first_name, last_name, class_number, class_letter, is_registered))
         conn.commit()
 
+def remove_student(tg_id: int):
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT 1 FROM students WHERE telegram_id = ?", (tg_id,))
+        if cursor.fetchone() is None:
+            return
+
+        cursor.execute("DELETE FROM students WHERE telegram_id=?", (tg_id,))
+        conn.commit()
+
 def print_students():
     """
     Возвращает список учеников из базы данных.
@@ -39,3 +49,31 @@ def is_student_in_db(tg_id: int):
         cursor = conn.cursor()
         cursor.execute("SELECT 1 FROM students WHERE telegram_id=?", (tg_id,))
         return cursor.fetchone() is not None
+
+def register_student(tg_id: int):
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute("UPDATE students SET is_registered = 1 WHERE telegram_id = ?", (tg_id,))
+        conn.commit()
+
+def get_student_name(tg_id: int):
+    """
+    Возвращает имя ученика по айди телеграмм-аккаунта
+    :param tg_id: айди телеграмм акаунта
+    :return: имя ученика
+    """
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT first_name FROM students WHERE telegram_id=?", (tg_id,))
+        return cursor.fetchone()[0]
+
+def get_student_surname(tg_id: int):
+    """
+    Возвращает фамилию ученика по айди телеграмм-аккаунта
+    :param tg_id: айди телеграмм акаунта
+    :return: фамилия ученика
+    """
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT last_name FROM students WHERE telegram_id=?", (tg_id,))
+        return cursor.fetchone()[0]

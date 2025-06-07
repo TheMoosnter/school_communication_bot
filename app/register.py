@@ -28,7 +28,7 @@ async def cmd_register(message: Message, state: FSMContext):
     :param state:
     :return:
     """
-    if is_student_in_db(message.chat.id):
+    if is_user_in_db(message.chat.id):
         await message.answer("Ваш акаунт вже зареєстрований. У випадку, якщо ви не проходили реєстрацію, зверніться до старости класу.")
         return
 

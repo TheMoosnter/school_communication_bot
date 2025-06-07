@@ -45,6 +45,12 @@ def print_students():
         cursor.execute("SELECT * FROM students")
         return cursor.fetchall()
 
+def is_user_in_db(tg_id: int):
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT 1 FROM students WHERE telegram_id=?", (tg_id,))
+        return cursor.fetchone() is not None
+
 def is_student_in_db(tg_id: int):
     """
     Проверяет наличие телеграмм-акаунта в базе данных.
@@ -53,7 +59,7 @@ def is_student_in_db(tg_id: int):
     """
     with get_connection() as conn:
         cursor = conn.cursor()
-        cursor.execute("SELECT 1 FROM students WHERE telegram_id=?", (tg_id,))
+        cursor.execute("SELECT 1 FROM students WHERE telegram_id=? AND is_registered=1", (tg_id,))
         return cursor.fetchone() is not None
 
 def register_student(tg_id: int):

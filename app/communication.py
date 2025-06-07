@@ -1,5 +1,5 @@
 from aiogram import Router
-from aiogram.filters import Command, CommandStart
+from aiogram.filters import Command
 from aiogram.types import Message
 from aiogram.fsm.state import StatesGroup, State
 from aiogram.fsm.context import FSMContext
@@ -11,10 +11,6 @@ router = Router()
 
 class Form(StatesGroup):
     text = State()
-
-@router.message(CommandStart())
-async def start(message: Message):
-    await message.answer("Привіт! Цей бот - Система Оперативного Взаємозв'язку з Адміністрацією, скорочено - СОВА.\nУ цьому боті можна комунікувати з представниками учнівського самоврядування та адміністрацією школи задля пропонування ідей, ставлення питань або звичайних повідомлень.\n/suggest - запропонувати ідею;\n/ask - поставити запитання;\n/message - надіслати повідомлення.")
 
 @router.message(Command("suggest", "ask", "message"))
 async def cmd_message(message: Message, state: FSMContext):

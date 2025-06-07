@@ -9,6 +9,7 @@ def create_student_table():
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS students (
                 telegram_id INTEGER PRIMARY KEY,
+                username TEXT,
                 first_name TEXT NOT NULL,
                 last_name TEXT NOT NULL,
                 class_number INTEGER NOT NULL,

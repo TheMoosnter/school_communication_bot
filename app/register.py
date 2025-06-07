@@ -77,6 +77,7 @@ async def get_class_letter(callback: CallbackQuery, state: FSMContext, bot):
 
     add_students(
         tg_id=callback.from_user.id,
+        username=callback.from_user.username,
         first_name=data['name'],
         last_name=data['surname'],
         class_number=data['class_number'],

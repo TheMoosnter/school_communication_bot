@@ -8,6 +8,7 @@ from app.middlewares.admin_middleware import AdminCheckMiddleware
 router = Router()
 router.message.middleware(AdminCheckMiddleware())
 
+
 @router.message(F.reply_to_message, ~F.text.startswith("/"))
 async def get_mes_data(message: Message, bot):
     if not message.reply_to_message:
@@ -28,7 +29,11 @@ async def get_mes_data(message: Message, bot):
     message_id = int(message_id_str.group(1))
 
     try:
-        await bot.send_message(author_id, f"Відповідь від адміністрації:\n\n{message.text}", reply_to_message_id=message_id)
+        await bot.send_message(
+            author_id,
+            f"Відповідь від адміністрації:\n\n{message.text}",
+            reply_to_message_id=message_id,
+        )
         await message.answer("Повідомлення було відправлено.")
 
     except TelegramForbiddenError:
@@ -38,7 +43,9 @@ async def get_mes_data(message: Message, bot):
         # message to be replied not found
         if "message to be replied not found" in str(e):
             try:
-                await bot.send_message(author_id, f"Відповідь від адміністрації:\n\n{message.text}")
+                await bot.send_message(
+                    author_id, f"Відповідь від адміністрації:\n\n{message.text}"
+                )
                 await message.answer("Повідомлення було відправлено.")
             except TelegramForbiddenError:
                 await message.answer("Не вдалося відправити повідомлення.")

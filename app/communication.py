@@ -14,6 +14,7 @@ router.message.middleware(StudentCheckMiddleware())
 class Form(StatesGroup):
     text = State()
 
+
 @router.message(Command("suggest", "ask", "message"))
 async def cmd_message(message: Message, state: FSMContext):
     """
@@ -23,8 +24,12 @@ async def cmd_message(message: Message, state: FSMContext):
     в режим ожидания текста сообщения.
     """
     await state.set_state(Form.text)
-    await state.update_data(command=message.text[1:]) # Сохранение текста команды без "/"
-    await message.answer("Будь ласка, введіть текст повідомлення.\nПримітка: введіть текст одним повідомленням.")
+    # Сохранение текста команды без "/"
+    await state.update_data(command=message.text[1:])
+    await message.answer(
+        "Будь ласка, введіть текст повідомлення.\nПримітка: введіть текст одним повідомленням."
+    )
+
 
 @router.message(Form.text)
 async def message_text_handler(message: Message, state: FSMContext, bot):
@@ -45,4 +50,3 @@ async def message_text_handler(message: Message, state: FSMContext, bot):
     await message.answer("Повідомлення відправлено. Дякуємо за вашу активність!")
 
     await state.clear()
-

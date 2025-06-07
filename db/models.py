@@ -1,5 +1,6 @@
 from .db import get_connection
 
+
 def create_student_table():
     """
     Создаёт таблицу students (если её не существует)

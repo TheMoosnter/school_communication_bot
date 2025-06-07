@@ -12,7 +12,13 @@ dp = Dispatcher()
 
 
 async def main():
-    dp.include_routers(communication.router, admin.router, technical.router, register.router, start.router)
+    dp.include_routers(
+        communication.router,
+        admin.router,
+        technical.router,
+        register.router,
+        start.router,
+    )
     await dp.start_polling(bot)
 
 

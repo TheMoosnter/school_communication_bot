@@ -1,6 +1,7 @@
 import sqlite3
 from config import config
 
+
 def get_connection():
     """
     Подключается к базе данных

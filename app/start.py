@@ -6,6 +6,7 @@ from db.crud import is_student_in_db
 
 router = Router()
 
+
 @router.message(CommandStart())
 async def start(message: Message):
     """

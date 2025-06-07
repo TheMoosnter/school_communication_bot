@@ -5,8 +5,10 @@ from aiogram.fsm.state import StatesGroup, State
 from aiogram.fsm.context import FSMContext
 
 from utils.message_forward import ChatSender
+from app.middlewares.communication_middleware import StudentCheckMiddleware
 
 router = Router()
+router.message.middleware(StudentCheckMiddleware())
 
 
 class Form(StatesGroup):

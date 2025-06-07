@@ -49,6 +49,12 @@ async def get_surname(message: Message, state: FSMContext):
 
 @router.message(RegisterStates.waiting_for_class_number)
 async def get_class_number(message: Message, state: FSMContext):
+    """
+    Получает номер класса и отправляет сообщение с inline-клавиатурой с доступными
+    буквами класса
+    :param message:
+    :param state:
+    """
     class_number = message.text.strip()
 
     await state.set_state(RegisterStates.waiting_for_class_letter)
@@ -72,6 +78,14 @@ async def get_class_number(message: Message, state: FSMContext):
 
 @router.callback_query(RegisterStates.waiting_for_class_letter, F.data.startswith("letter:"))
 async def get_class_letter(callback: CallbackQuery, state: FSMContext, bot):
+    """
+    Получает выбранную букву из callback сообщения формата letter:А,
+    добавляет аккаунт в базу данных, вызывает функцию отправки запроса о регистрации
+    старосте выбранного класса
+    :param callback:
+    :param state:
+    :param bot:
+    """
     letter = callback.data.split(":")[1]
     data = await state.get_data()
 
@@ -101,6 +115,13 @@ async def get_class_letter(callback: CallbackQuery, state: FSMContext, bot):
 
 @router.callback_query(F.data.startswith("approve:"))
 async def approve_student(callback: CallbackQuery, bot: Bot):
+    """
+    Получает айди телеграмм-аккаунта, который прошёл верификацию старостой и завершает
+    процесс регистрации.
+    :param callback:
+    :param bot:
+    :return:
+    """
     student_id = int(callback.data.split(":")[1])
     student_name = get_student_name(student_id) + " " + get_student_surname(student_id)
 
@@ -112,6 +133,13 @@ async def approve_student(callback: CallbackQuery, bot: Bot):
 
 @router.callback_query(F.data.startswith("reject:"))
 async def reject_student(callback: CallbackQuery, bot: Bot):
+    """
+    Получает айди телеграмм-аккаунта, который не прошёл верификацию старостой и
+    удаляет его из базы данных.
+    :param callback:
+    :param bot:
+    :return:
+    """
     student_id = int(callback.data.split(":")[1])
     student_name = get_student_name(student_id) + " " + get_student_surname(student_id)
 

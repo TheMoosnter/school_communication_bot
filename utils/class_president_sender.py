@@ -11,6 +11,15 @@ class ClassPresidentSender:
 
     async def send_reg_request_to_class_president(self, tg_id: int, tg_full_name: str, name: str, surname: str,
                                                   class_number: int, class_letter: str):
+        """
+        Отправляет заявку о регистрации ученика старосте класса, выбранного учеником
+        :param tg_id: айди телеграмм-аккаунта
+        :param tg_full_name: полное имя телеграмм-аккаунта
+        :param name: имя ученика
+        :param surname: фамилия ученика
+        :param class_number: номер класса
+        :param class_letter: буква класса
+        """
         classes = self.classes_data[int(class_number)]
         class_president_id = classes.get(class_letter)
 

@@ -21,6 +21,11 @@ def add_students(tg_id: int, username: str, first_name: str, last_name: str, cla
         conn.commit()
 
 def remove_student(tg_id: int):
+    """
+    Удаляет аккаунт из базы данных
+    :param tg_id: айди телеграмм-аккаунта
+    :return: если аккаунт отсутствует в базе данных, возвращает функцию
+    """
     with get_connection() as conn:
         cursor = conn.cursor()
         cursor.execute("SELECT 1 FROM students WHERE telegram_id = ?", (tg_id,))
@@ -52,6 +57,10 @@ def is_student_in_db(tg_id: int):
         return cursor.fetchone() is not None
 
 def register_student(tg_id: int):
+    """
+    Завершает процесс регистрации ученика.
+    :param tg_id: телеграмм-аккаунт ученика
+    """
     with get_connection() as conn:
         cursor = conn.cursor()
         cursor.execute("UPDATE students SET is_registered = 1 WHERE telegram_id = ?", (tg_id,))

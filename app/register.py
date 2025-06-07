@@ -7,7 +7,7 @@ from aiogram.types import (CallbackQuery, InlineKeyboardButton,
                            InlineKeyboardMarkup, Message)
 
 from config import config
-from db.crud import *
+from db.crud import StudentsDB
 from utils.class_president_sender import ClassPresidentSender
 
 
@@ -18,6 +18,7 @@ class RegisterStates(StatesGroup):
     waiting_for_class_letter = State()
 
 
+stud_db = StudentsDB()
 router = Router()
 
 
@@ -29,7 +30,7 @@ async def cmd_register(message: Message, state: FSMContext):
     :param state:
     :return:
     """
-    if is_user_in_db(message.chat.id):
+    if stud_db.exists(message.chat.id):
         await message.answer(
             "Ваш акаунт вже зареєстрований. У випадку, якщо ви не проходили реєстрацію, зверніться до старости класу."
         )
@@ -96,7 +97,7 @@ async def get_class_letter(callback: CallbackQuery, state: FSMContext, bot):
     letter = callback.data.split(":")[1]
     data = await state.get_data()
 
-    add_students(
+    stud_db.add(
         tg_id=callback.from_user.id,
         username=callback.from_user.username,
         first_name=data["name"],
@@ -131,9 +132,9 @@ async def approve_student(callback: CallbackQuery, bot: Bot):
     :return:
     """
     student_id = int(callback.data.split(":")[1])
-    student_name = get_student_name(student_id) + " " + get_student_surname(student_id)
+    student_name = stud_db.get_name(student_id) + " " + stud_db.get_surname(student_id)
 
-    register_student(tg_id=student_id)
+    stud_db.register(tg_id=student_id)
 
     student_link = f'<a href="tg://user?id={student_id}">{student_name}</a>'
     await callback.message.edit_text(
@@ -155,9 +156,9 @@ async def reject_student(callback: CallbackQuery, bot: Bot):
     :return:
     """
     student_id = int(callback.data.split(":")[1])
-    student_name = get_student_name(student_id) + " " + get_student_surname(student_id)
+    student_name = stud_db.get_name(student_id) + " " + stud_db.get_surname(student_id)
 
-    remove_student(student_id)
+    stud_db.remove(student_id)
 
     student_link = f'<a href="tg://user?id={student_id}">{student_name}</a>'
     await callback.message.edit_text(

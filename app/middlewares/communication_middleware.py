@@ -3,7 +3,9 @@ from typing import Any, Awaitable, Callable, Dict
 from aiogram import BaseMiddleware
 from aiogram.types.message import Message
 
-from db.crud import is_student_in_db, is_user_in_db
+from db.crud import StudentsDB
+
+stud_db = StudentsDB()
 
 
 class StudentCheckMiddleware(BaseMiddleware):
@@ -13,12 +15,12 @@ class StudentCheckMiddleware(BaseMiddleware):
         event: Message,
         data: Dict[str, Any],
     ) -> Any:
-        if not is_user_in_db(event.from_user.id):  # Если пользователя нет в базе данных, он не регистрировался
+        if not stud_db.exists(event.from_user.id):  # Если пользователя нет в базе данных, он не регистрировался
             await event.answer(
                 "Ви не зареєструвалися в боті.\nВикористайте команду /register для проходження реєстрації."
             )
             return
-        elif not is_student_in_db(event.from_user.id):  # Пользователь регистрировался, но заявка не подтверждена
+        elif not stud_db.is_registered(event.from_user.id):  # Пользователь регистрировался, но заявка не подтверждена
             await event.answer(
                 "Ваша заявка не підтверджена.\nУ випадку довготривалого очікування проходження верифікації, зверніться до старости вашого класу."
             )

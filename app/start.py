@@ -2,9 +2,10 @@ from aiogram import Router
 from aiogram.filters import CommandStart
 from aiogram.types import Message
 
-from db.crud import is_student_in_db
+from db.crud import StudentsDB
 
 router = Router()
+stud_db = StudentsDB()
 
 
 @router.message(CommandStart())
@@ -13,7 +14,7 @@ async def start(message: Message):
     Стартовая команда. Если ученик зарегистрирован, выводит доступные команды,
     если не зарегистрирован - выводит подсказку о команде /register.
     """
-    if is_student_in_db(message.from_user.id):
+    if stud_db.exists(message.from_user.id):
         await message.answer("Привіт! Цей бот - Система Оперативного Взаємозв'язку з Адміністрацією, скорочено - СОВА.\nУ цьому боті можна комунікувати з представниками учнівського самоврядування та адміністрацією школи задля пропонування ідей, ставлення питань або звичайних повідомлень.\n/suggest - запропонувати ідею;\n/ask - поставити запитання;\n/message - надіслати повідомлення.")
     else:
         await message.answer("Привіт! Цей бот - Система Оперативного Взаємозв'язку з Адміністрацією, скорочено - СОВА.\nУ цьому боті можна комунікувати з представниками учнівського самоврядування та адміністрацією школи задля пропонування ідей, ставлення питань або звичайних повідомлень.\n\nДля початку роботи, вам треба пройти реєстрацію.Введіть команду /register")

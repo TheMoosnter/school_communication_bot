@@ -125,3 +125,27 @@ class StudentsDB:
             cursor = conn.cursor()
             cursor.execute("SELECT last_name FROM students WHERE telegram_id=?", (tg_id,))
             return cursor.fetchone()[0]
+
+
+    def get_class_number(self, tg_id: int):
+        """
+        Возвращает номер класса ученика по айди телеграмм-аккаунта
+        :param tg_id: айди телеграмм акаунта
+        :return: фамилия ученика
+        """
+        with get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT class_number FROM students WHERE telegram_id=?", (tg_id,))
+            return cursor.fetchone()[0]
+
+
+    def get_class_letter(self, tg_id: int):
+        """
+        Возвращает букву класса ученика по айди телеграмм-аккаунта
+        :param tg_id: айди телеграмм акаунта
+        :return: фамилия ученика
+        """
+        with get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT class_letter FROM students WHERE telegram_id=?", (tg_id,))
+            return cursor.fetchone()[0]

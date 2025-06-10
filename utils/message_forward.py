@@ -1,7 +1,9 @@
 from aiogram import Bot
 
 from config import config
+from db.crud import StudentsDB
 
+stud_db = StudentsDB()
 
 class ChatSender:
     def __init__(self, bot: Bot):
@@ -20,8 +22,8 @@ class ChatSender:
 
         hidden_author_id = f"[user_id:{user.id}]"
         hidden_message_id = f"[message_id:{mes.message_id}]"
-        user_link = f'<a href="tg://user?id={user.id}">{user.full_name}</a>'
-        message = f"Повідомлення від учня {user_link}: \n\n{mes.text}\n\n{hidden_author_id}\n{hidden_message_id}"
+        user_link = f'<a href="tg://user?id={user.id}">{stud_db.get_name(user.id)} {stud_db.get_surname(user.id)}</a>'
+        message = f"Повідомлення від учня {user_link} з {stud_db.get_class_number(user.id)}-{stud_db.get_class_letter(user.id)} класу: \n\n{mes.text}\n\n{hidden_author_id}\n{hidden_message_id}"
         await self.bot.send_message(
             text=message,
             chat_id=self.chat_id,

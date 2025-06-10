@@ -1,13 +1,12 @@
 from aiogram import Bot
 from aiogram.enums import ParseMode
-from aiogram.types import (CallbackQuery, InlineKeyboardButton,
-                           InlineKeyboardMarkup, ReplyKeyboardMarkup)
+from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 from config import config
 
 
 class ClassPresidentSender:
-    def __init__(self, bot):
+    def __init__(self, bot: Bot):
         self.bot = bot
         self.classes_data = config.class_presidents_data
 

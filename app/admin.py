@@ -5,6 +5,7 @@ from aiogram.exceptions import TelegramBadRequest, TelegramForbiddenError
 from aiogram.types import Message
 
 from app.middlewares.admin_middleware import AdminCheckMiddleware
+from utils.safe_send import SafeSender
 
 router = Router()
 router.message.middleware(AdminCheckMiddleware())
@@ -28,27 +29,10 @@ async def get_mes_data(message: Message, bot):
 
     author_id = int(author_id_str.group(1))
     message_id = int(message_id_str.group(1))
-
-    try:
-        await bot.send_message(
-            author_id,
-            f"Відповідь від адміністрації:\n\n{message.text}",
-            reply_to_message_id=message_id,
-        )
-        await message.answer("Повідомлення було відправлено.")
-
-    except TelegramForbiddenError:
-        await message.answer("Не вдалося відправити повідомлення.")
-
-    except TelegramBadRequest as e:
-        # message to be replied not found
-        if "message to be replied not found" in str(e):
-            try:
-                await bot.send_message(
-                    author_id, f"Відповідь від адміністрації:\n\n{message.text}"
-                )
-                await message.answer("Повідомлення було відправлено.")
-            except TelegramForbiddenError:
-                await message.answer("Не вдалося відправити повідомлення.")
-        else:
-            await message.answer("Не вдалося відправити повідомлення.")
+    sf = SafeSender(bot)
+    await sf.send_message_with_reply(
+        message=message,
+        send_to=author_id,
+        text=f"Відповідь від адміністрації:\n\n{message.text}",
+        reply_to_message_id=message_id
+    )

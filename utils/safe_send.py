@@ -1,6 +1,5 @@
 from aiogram import Bot
-from aiogram.exceptions import TelegramForbiddenError, TelegramBadRequest
-from aiogram.types import message_id
+from aiogram.exceptions import TelegramBadRequest, TelegramForbiddenError
 
 
 class SafeSender:

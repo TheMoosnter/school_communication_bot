@@ -131,11 +131,11 @@ class StudentsDB:
         """
         Возвращает номер класса ученика по айди телеграмм-аккаунта
         :param tg_id: айди телеграмм акаунта
-        :return: фамилия ученика
+        :return: номер класса
         """
         with get_connection() as conn:
             cursor = conn.cursor()
-            cursor.execute("SELECT class_number FROM students WHERE telegram_id=?", (tg_id,))
+            cursor.execute("SELECT class_number FROM students WHERE telegram_id=?", (int(tg_id),))
             return cursor.fetchone()[0]
 
 
@@ -143,9 +143,35 @@ class StudentsDB:
         """
         Возвращает букву класса ученика по айди телеграмм-аккаунта
         :param tg_id: айди телеграмм акаунта
-        :return: фамилия ученика
+        :return: буква класса
         """
         with get_connection() as conn:
             cursor = conn.cursor()
             cursor.execute("SELECT class_letter FROM students WHERE telegram_id=?", (tg_id,))
             return cursor.fetchone()[0]
+
+
+    def get_username(self, tg_id: int):
+        """
+        Возвращает никнейм телеграмм аккаунта ученика по айди телеграмм аккаунта
+        :param tg_id: айди телеграмм аккаунта
+        :return: никнейм телеграмм аккаунта
+        """
+        with get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT username FROM students WHERE telegram_id=?", (tg_id,))
+            return cursor.fetchone()[0]
+
+
+    def get_id_by_full_name(self, first_name: str, last_name: str):
+        """
+        Возвращает список кортежей с айди телеграмм аккаунтов, которые зарегистрированы
+        на ученика, имя и фамилия которого передаются в параметрах.
+        :param first_name: имя ученика
+        :param last_name: фамилия ученика
+        :return: список кортежей с айди аккаунтов
+        """
+        with get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT telegram_id FROM students WHERE first_name=? AND last_name=?", (first_name, last_name,))
+            return cursor.fetchall()

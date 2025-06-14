@@ -175,3 +175,14 @@ class StudentsDB:
             cursor = conn.cursor()
             cursor.execute("SELECT telegram_id FROM students WHERE first_name=? AND last_name=?", (first_name, last_name,))
             return cursor.fetchall()
+
+
+    def get_all(self):
+        """
+        Возвращает список кортежей с данными про всех учеников, существующих в базе данных.
+        :return: список кортежей с данными учеников
+        """
+        with get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT class_number, class_letter, last_name, first_name, username, is_registered FROM students ORDER BY class_number, class_letter, last_name, first_name, is_registered")
+            return cursor.fetchall()

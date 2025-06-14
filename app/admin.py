@@ -9,6 +9,8 @@ from aiogram.types import Message
 from app.middlewares.admin_middleware import AdminCheckMiddleware
 from db.crud import StudentsDB
 from utils.safe_send import SafeSender
+from config import config
+from utils.constants import TELEGRAM_MAX_MESSAGE_LENGTH
 
 router = Router()
 router.message.middleware(AdminCheckMiddleware())
@@ -46,7 +48,7 @@ async def get_mes_data(message: Message, bot):
 
 
 @router.message(Command("get_info"))
-async def cmd_get_info(message: Message, bot, state: FSMContext):
+async def cmd_get_info(message: Message, state: FSMContext):
     """
     Обработчик команды /get_info.
 
@@ -56,7 +58,7 @@ async def cmd_get_info(message: Message, bot, state: FSMContext):
     await message.answer("Введіть повне ім'я учня")
 
 @router.message(GetFullName.waiting_for_full_name)
-async def cmd_get_info_get_surname(message: Message, bot, state: FSMContext):
+async def cmd_get_info_get_surname(message: Message, state: FSMContext):
     """
     Получает имя и фамилию ученика и с помощью айди телеграмм аккаунта выводит
     информацию об ученике.
@@ -79,3 +81,33 @@ async def cmd_get_info_get_surname(message: Message, bot, state: FSMContext):
         await message.answer(text)
 
     await state.clear()
+
+
+@router.message(Command("print_db"))
+async def cmd_print_db(message: Message, state: FSMContext):
+    text = "Зареєстровані учні:"
+    students = stud_db.get_all()
+
+    if not students:
+        await message.answer("Жодного учня не зареєстровано.")
+        return
+
+    previous = None
+
+    for class_num, class_let, surname, name, username, is_reg in students:
+        class_id = f"{class_num}{class_let}"
+
+        if previous != class_id:
+            text += f"\n\n{class_num}-{class_let}:"
+
+        text += f"\n• {name} {surname}: @{username}"
+        if not is_reg:
+            text += " (незареєстрований)"
+        previous = class_id
+
+    parts = [text[i:i+TELEGRAM_MAX_MESSAGE_LENGTH] for i in range(0, len(text), TELEGRAM_MAX_MESSAGE_LENGTH)]
+    for part in parts:
+        await message.answer(part)
+
+
+
